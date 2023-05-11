@@ -53,12 +53,12 @@ class FormEntregador extends React.Component {
             ativo: this.state.ativo
         }
 
-        axios.post("http://localhost:8082/api/cliente", EntregadorRequest)
+        axios.post("http://localhost:8082/api/entregador", EntregadorRequest)
             .then((response) => {
-                console.log('Entregador cadastrado com sucesso.')
+                alert('Entregador cadastrado com sucesso.')
             })
             .catch((error) => {
-                console.log('Erro ao incluir o um cliente.')
+                alert('Erro ao incluir o um cliente.')
             })
     }
 
@@ -93,17 +93,18 @@ class FormEntregador extends React.Component {
                                         fluid
                                         label='CPF'
                                         value={this.state.cpf}
-                                        onChange={e => this.setState({ cpf: e.target.value })}
                                         required
                                         width={4}>
                                         <InputMask
-                                            mask="999.999.999-99" />
+                                            mask="999.999.999-99" onChange={e => this.setState({ cpf: e.target.value })} />
                                     </Form.Input>
 
                                     <Form.Input
                                         fluid
                                         label='RG'
                                         width={4}
+                                        value={this.state.rg}
+                                        onChange={e => this.setState({ rg: e.target.value })}
                                     />
 
                                 </Form.Group>
@@ -114,9 +115,9 @@ class FormEntregador extends React.Component {
                                         fluid
                                         label='DT Nascimento'
                                         value={this.state.dataNascimento}
-                                        onChange={e => this.setState({ dataNascimento: e.target.value })}
                                         width={3}>
-                                        <InputMask mask="99/99/9999" placeholder="Ex: 20/03/1985" />
+                                        <InputMask mask="99/99/9999" placeholder="Ex: 20/03/1985" 
+                                        onChange={e => this.setState({ dataNascimento: e.target.value })} />
                                     </Form.Input>
 
 
@@ -124,10 +125,10 @@ class FormEntregador extends React.Component {
                                         fluid
                                         label='Fone Celular'
                                         value={this.state.foneCelular}
-                                        onChange={e => this.setState({ foneCelular: e.target.value })}
                                         required
                                         width={4}>
-                                        <InputMask mask="(99) 99999.9999" />
+                                        <InputMask mask="(99) 99999.9999" 
+                                        onChange={e => this.setState({ foneCelular: e.target.value })} />
                                     </Form.Input>
 
 
@@ -135,9 +136,9 @@ class FormEntregador extends React.Component {
                                         fluid
                                         label='Fone Fixo'
                                         value={this.state.foneFixo}
-                                        onChange={e => this.setState({ foneFixo: e.target.value })}
                                         width={4}>
-                                        <InputMask mask="(99) 9999.9999" />
+                                        <InputMask mask="(99) 9999.9999" 
+                                        onChange={e => this.setState({ foneFixo: e.target.value })} />
                                     </Form.Input>
 
 
@@ -201,9 +202,9 @@ class FormEntregador extends React.Component {
                                         fluid
                                         label='CEP'
                                         value={this.state.enderecoCep}
-                                        onChange={e => this.setState({ enderecoCep: e.target.value })}
                                         width={2}>
-                                        <InputMask mask="99.999-9999" />
+                                        <InputMask mask="99.999-999" 
+                                        onChange={e => this.setState({ enderecoCep: e.target.value })} />
                                     </Form.Input>
 
 
