@@ -71,6 +71,22 @@ class MenuSistema extends React.Component {
                         to='/list-entregador'
                     />
 
+                    <Menu.Item
+                        name='Criar cupom'
+                        active={this.state.activeItem === 'cliente'}
+                        onClick={this.handleItemClick}
+                        as={Link}
+                        to='/form-cupom'
+                    />
+
+                    <Menu.Item
+                        name='Listar Cupons'
+                        active={this.state.activeItem === 'cliente'}
+                        onClick={this.handleItemClick}
+                        as={Link}
+                        to='/list-cupons'
+                    />
+
 
                 </Menu>
             </>

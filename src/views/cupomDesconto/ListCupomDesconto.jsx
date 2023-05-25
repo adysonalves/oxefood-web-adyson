@@ -7,7 +7,7 @@ class ListCliente extends React.Component {
 
     state = {
 
-        listaClientes: []
+        listaCupons: []
 
     }
 
@@ -19,11 +19,11 @@ class ListCliente extends React.Component {
 
     carregarLista = () => {
 
-        axios.get("http://localhost:8082/api/cliente")
+        axios.get("http://localhost:8082/api/cupomDesconto")
             .then((response) => {
 
                 this.setState({
-                    listaClientes: response.data
+                    listaCupons: response.data
                 })
             })
 
@@ -51,7 +51,7 @@ class ListCliente extends React.Component {
 
                     <Container textAlign='justified' >
 
-                        <h2> Cliente </h2>
+                        <h2> Cupons de desconto </h2>
 
                         <Divider />
 
@@ -66,7 +66,7 @@ class ListCliente extends React.Component {
                                 floated='right'
                             >
                                 <Icon name='clipboard outline' />
-                                <Link to={'/form-cliente'}>Novo</Link>
+                                <Link to={'/form-cupom'}>Novo</Link>
                             </Button>
 
                             <br /><br /><br />
@@ -75,36 +75,37 @@ class ListCliente extends React.Component {
 
                                 <Table.Header>
                                     <Table.Row>
-                                        <Table.HeaderCell>Nome</Table.HeaderCell>
-                                        <Table.HeaderCell>CPF</Table.HeaderCell>
-                                        <Table.HeaderCell>Data de Nascimento</Table.HeaderCell>
-                                        <Table.HeaderCell>Fone Celular</Table.HeaderCell>
-                                        <Table.HeaderCell>Fone Fixo</Table.HeaderCell>
+                                        <Table.HeaderCell>Código</Table.HeaderCell>
+                                        <Table.HeaderCell>% de Desconto</Table.HeaderCell>
+                                        <Table.HeaderCell>Valor do desconto</Table.HeaderCell>
+                                        <Table.HeaderCell>Mínimo para pedido</Table.HeaderCell>
+                                        <Table.HeaderCell>Qnt. de Uso</Table.HeaderCell>
+                                        <Table.HeaderCell>Ínicio da vigência</Table.HeaderCell>
+                                        <Table.HeaderCell>Válido até</Table.HeaderCell>
                                         <Table.HeaderCell textAlign='center' width={2}>Ações</Table.HeaderCell>
                                     </Table.Row>
                                 </Table.Header>
 
                                 <Table.Body>
 
-                                    {this.state.listaClientes.map(cliente => (
+                                    {this.state.listaCupons.map(cupom => (
 
                                         <Table.Row>
-                                            <Table.Cell>{cliente.nome}</Table.Cell>
-                                            <Table.Cell>{cliente.cpf}</Table.Cell>
-                                            <Table.Cell>{this.formatarData(cliente.dataNascimento)}</Table.Cell>
-                                            <Table.Cell>{cliente.foneCelular}</Table.Cell>
-                                            <Table.Cell>{cliente.foneFixo}</Table.Cell>
+                                            <Table.Cell>{cupom.codigoDesconto}</Table.Cell>
+                                            <Table.Cell>{cupom.percentualDesconto}%</Table.Cell>
+                                            <Table.Cell>R${cupom.valorDesconto}</Table.Cell>
+                                            <Table.Cell>R${cupom.valorMinimoPedidoPermitido}</Table.Cell>
+                                            <Table.Cell>{cupom.quantidadeMaximaUso}</Table.Cell>
+                                            <Table.Cell>{this.formatarData(cupom.inicioVigencia)}</Table.Cell>
+                                            <Table.Cell>{this.formatarData(cupom.fimVigencia)}</Table.Cell>
                                             <Table.Cell textAlign='center'>
 
                                                 <Button
                                                     inverted
                                                     circular
-                                                    color='green'
-                                                    title='Clique aqui para editar os dados deste cliente'
-                                                    icon>
-                                                    <Link to="/form-cliente" state={{ id: cliente.id }} style={{ color: 'green' }}> <Icon name='edit' /> </Link>
-                                                </Button> &nbsp;
-
+                                                    icon='edit'
+                                                    color='blue'
+                                                    itle='Clique aqui para editar os dados deste entregador' /> &nbsp;
 
                                                 <Button
                                                     inverted
