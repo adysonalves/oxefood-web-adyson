@@ -4,7 +4,9 @@ import InputMask from 'react-input-mask';
 import { Link, useLocation } from "react-router-dom";
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
 
-function FormCliente() {
+export default function FormCliente () {
+
+	const { state } = useLocation();
 
 	const [idCliente, setIdCliente] = useState();
 	const [nome, setNome] = useState();
@@ -13,11 +15,44 @@ function FormCliente() {
 	const [foneCelular, setFoneCelular] = useState();
 	const [foneFixo, setFoneFixo] = useState();
 
+	useEffect(() => {
+		
+		if (state != null && state.id != null) {
 
+			axios.get('http://localhost:8082/api/cliente/'+state.id)
+			.then((response) => {
+
+				console.log('response.data.nome: ',response.data.nome)
+				
+				setIdCliente(response.data.id)
+				setNome(response.data.nome)
+				setCpf(response.data.cpf)
+				setDataNascimento(formatarData(response.data.dataNascimento))
+				setFoneCelular(response.data.foneCelular)
+				setFoneFixo(response.data.foneFixo)
+			})
+		}
+		
+	}, [state])
+
+	function formatarData(dataParam) {
+
+        if (dataParam == null || dataParam == '') {
+            return ''
+        }
+        
+        let dia = dataParam.substr(8,2);
+        let mes = dataParam.substr(5,2);
+        let ano = dataParam.substr(0,4);
+        let dataFormatada = dia + '/' + mes + '/' + ano;
+
+        return dataFormatada
+    }
 
 	function salvar() {
 
 		let clienteRequest = {
+
 			nome: nome,
 			cpf: cpf,
 			dataNascimento: dataNascimento,
@@ -26,53 +61,37 @@ function FormCliente() {
 		}
 
 		if (idCliente != null) { //Alteração:
-			axios.put("http://localhost:8082/api/cliente" + idCliente, clienteRequest)
-				.then((response) => { console.log('Cliente alterado com sucesso.') })
-				.catch((error) => { console.log('Erro ao alter um cliente.') })
+
+			axios.put("http://localhost:8082/api/cliente/" + idCliente, clienteRequest)
+			.then((response) => { console.log('Cliente alterado com sucesso.') })
+			.catch((error) => { console.log('Erro ao alter um cliente.') })
+			
 		} else { //Cadastro:
-			axios.post("http://localhost:8082/api/cliente", clienteRequest)
-				.then((response) => { console.log('Cliente cadastrado com sucesso.') })
-				.catch((error) => { console.log('Erro ao incluir o cliente.') })
+
+			axios.post("http://localhost:8082/api/cliente/", clienteRequest)
+			.then((response) => { console.log('Cliente cadastrado com sucesso.') })
+			.catch((error) => { console.log('Erro ao incluir o cliente.') })
 		}
+ 
 	}
 
-
-	const { state } = useLocation();
-
-	useEffect(() => {
-		if (state != null && state.id != null) {
-			axios.get("http://localhost:8082/api/cliente" + state.id)
-				.then((response) => {
-					setIdCliente(response.data.id)
-					setNome(response.data.nome)
-					setCpf(response.data.cpf)
-					setDataNascimento(response.data.dataNascimento)
-					setFoneCelular(response.data.foneCelular)
-					setFoneFixo(response.data.foneFixo)
-				})
-		}
-	}, [state])
-
-
-
-	return (
+	return(
 		<div>
 
-			<div style={{ marginTop: '3%' }}>
+			<div style={{marginTop: '3%'}}>
 
 				<Container textAlign='justified' >
 
-					{idCliente === undefined &&
-						<h2> <span style={{ color: 'darkgray' }}> Cliente &nbsp;<Icon name='angle double right' size="small" /> </span> Cadastro</h2>
+					{ idCliente === undefined &&
+						<h2> <span style={{color: 'darkgray'}}> Cliente &nbsp;<Icon name='angle double right' size="small" /> </span> Cadastro</h2>
 					}
-					{idCliente != undefined &&
-						<h2> <span style={{ color: 'darkgray' }}> Cliente &nbsp;<Icon name='angle double right' size="small" /> </span> Alteração</h2>
+					{ idCliente != undefined &&
+						<h2> <span style={{color: 'darkgray'}}> Cliente &nbsp;<Icon name='angle double right' size="small" /> </span> Alteração</h2>
 					}
-
 
 					<Divider />
 
-					<div style={{ marginTop: '4%' }}>
+					<div style={{marginTop: '4%'}}>
 
 						<Form>
 
@@ -89,39 +108,38 @@ function FormCliente() {
 
 								<Form.Input
 									fluid
-									label='CPF'
-									value={cpf}
-									onChange={e => setCpf(e.target.value)}
-								>
-									<InputMask
-										mask="999.999.999-99" />
-
+									label='CPF'>
+									<InputMask 
+										mask="999.999.999-99"
+										value={cpf}
+										onChange={e => setCpf(e.target.value)}
+									/> 
 								</Form.Input>
 
 							</Form.Group>
-
+							
 							<Form.Group>
 
 								<Form.Input
 									fluid
 									label='Fone Celular'
-									width={6}
-									value={foneCelular}
-									onChange={e => setFoneCelular(e.target.value)}
-								>
-									<InputMask
-										mask="(99) 9999.9999" />
+									width={6}>
+									<InputMask 
+										mask="(99) 9999.9999" 
+										value={foneCelular}
+										onChange={e => setFoneCelular(e.target.value)}
+									/> 
 								</Form.Input>
 
 								<Form.Input
 									fluid
 									label='Fone Fixo'
-									width={6}
-									value={foneFixo}
-									onChange={e => setFoneFixo(e.target.value)}
-								>
-									<InputMask
-										mask="(99) 9999.9999" />
+									width={6}>
+									<InputMask 
+										mask="(99) 9999.9999"
+										value={foneFixo}
+										onChange={e => setFoneFixo(e.target.value)}
+									/> 
 								</Form.Input>
 
 								<Form.Input
@@ -129,18 +147,18 @@ function FormCliente() {
 									label='Data Nascimento'
 									width={6}
 								>
-									<InputMask
-										mask="99/99/9999"
+									<InputMask 
+										mask="99/99/9999" 
 										maskChar={null}
 										placeholder="Ex: 20/03/1985"
 										value={dataNascimento}
 										onChange={e => setDataNascimento(e.target.value)}
-									/>
+									/> 
 								</Form.Input>
 
 							</Form.Group>
 
-							<Form.Group widths='equal' style={{ marginTop: '4%' }} className='form--empresa-salvar'>
+							<Form.Group widths='equal' style={{marginTop: '4%'}}  className='form--empresa-salvar'>
 
 								<Button
 									type="button"
@@ -149,13 +167,13 @@ function FormCliente() {
 									icon
 									labelPosition='left'
 									color='orange'
-								>
+									>
 									<Icon name='reply' />
 									<Link to={'/list-cliente'}>Voltar</Link>
 								</Button>
 
 								<Container textAlign='right'>
-
+									
 									<Button
 										inverted
 										circular
@@ -168,7 +186,7 @@ function FormCliente() {
 										<Icon name='save' />
 										Salvar
 									</Button>
-
+									
 								</Container>
 
 							</Form.Group>
@@ -180,6 +198,3 @@ function FormCliente() {
 		</div>
 	)
 }
-
-
-export default FormCliente;
