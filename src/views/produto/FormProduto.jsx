@@ -1,11 +1,14 @@
 import axios from 'axios';
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Button, Container, Divider, Form, Icon, TextArea } from 'semantic-ui-react';
 
 
 function FormCliente() {
 
+    const { state } = useLocation();
+
+    const [idProduto, setIdProduto] = useState();
     const [codigo, setCodigo] = useState("");
     const [titulo, setTitulo] = useState("");
     const [descricao, setDescricao] = useState("");
@@ -13,11 +16,31 @@ function FormCliente() {
     const [tempoEntregaMinimo, setTempoEntregaMinimo] = useState("");
     const [tempoEntregaMaximo, setTempoEntregaMaximo] = useState("");
 
-    
+    useEffect(() => {
+		
+		if (state != null && state.id != null) {
 
-    function salvar(){
+			axios.get('http://localhost:8082/api/produto/'+state.id)
+			.then((response) => {
 
-        let ProdutoRequest = {
+                console.log(response.data)
+				console.log('response.data.nome: ',response.data.nome)
+				
+				setIdProduto(response.data.id)
+				setCodigo(response.data.codigo)
+				setTitulo(response.data.titulo)
+				setDescricao(response.data.descricao)
+				setValorUnitario(response.data.valorUnitario)
+				setTempoEntregaMinimo(response.data.tempoEntregaMinimo)
+				setTempoEntregaMaximo(response.data.tempoEntregaMaximo)
+			})
+		}
+		
+	}, [state]);
+
+    function salvar() {
+
+		let ProdutoRequest = {
 
             codigo: codigo,
             titulo: titulo,
@@ -27,14 +50,23 @@ function FormCliente() {
             tempoEntregaMaximo: tempoEntregaMaximo
         }
 
-        axios.post("http://localhost:8082/api/produto", ProdutoRequest)
-            .then((response) => {
-                console.log('Produto cadastrado com sucesso.')
-            })
-            .catch((error) => {
-                console.log('Erro ao incluir o um Produto.')
-            })
-    }
+
+		if (idProduto != null) { //Alteração:
+
+			axios.put("http://localhost:8082/api/produto" + idProduto, ProdutoRequest)
+			.then((response) => { console.log('Produto alterado com sucesso.') })
+			.catch((error) => { console.log('Erro ao alter um Produto.') })
+			
+		} else { //Cadastro:
+
+			axios.post("http://localhost:8082/api/produto", ProdutoRequest)
+			.then((response) => { console.log('Produto cadastrado com sucesso.') })
+			.catch((error) => { console.log('Erro ao incluir o Produto.') })
+		}
+ 
+	}
+
+    
 
     
         return (
@@ -60,7 +92,7 @@ function FormCliente() {
                                         label='Título'
                                         maxLength="100"
                                         value={titulo}
-                                        onChange={e => this.setState({ titulo: e.target.value })}
+                                        onChange={e => setTitulo(e.target.value )}
                                     />
 
                                     <Form.Input
@@ -68,7 +100,7 @@ function FormCliente() {
                                         fluid
                                         label='Código do Produto'
                                         value={codigo}
-                                        onChange={e => this.setState({ codigo: e.target.value })}
+                                        onChange={e => setCodigo(e.target.value )}
 
                                     >
                                     </Form.Input>
@@ -81,7 +113,7 @@ function FormCliente() {
                                     label='Descrição'
                                     placeholder='Informe a descrição do produto'
                                     value={descricao}
-                                    onChange={e => this.setState({ descricao: e.target.value })}
+                                    onChange={e => setDescricao(e.target.value )}
 
                                 />
 
@@ -95,14 +127,14 @@ function FormCliente() {
                                         label='Valor Unitário'
                                         maxLength="100"
                                         value={valorUnitario}
-                                        onChange={e => this.setState({ valorUnitario: e.target.value })}
+                                        onChange={e => setValorUnitario(e.target.value )}
                                     />
 
                                     <Form.Input
                                         fluid
                                         label='Tempo de Entrega Mínimo em Minutos'
                                         value={tempoEntregaMinimo}
-                                        onChange={e => this.setState({ tempoEntregaMinimo: e.target.value })}
+                                        onChange={e => setTempoEntregaMinimo(e.target.value )}
                                         >
                                     </Form.Input>
 
@@ -110,7 +142,7 @@ function FormCliente() {
                                         fluid
                                         label='Tempo de Entrega Máximo em Minutos'
                                         value={tempoEntregaMaximo}
-                                        onChange={e => this.setState({ tempoEntregaMaximo: e.target.value })}
+                                        onChange={e => setTempoEntregaMaximo(e.target.value )}
                                         >
                                     </Form.Input>
 
@@ -125,7 +157,6 @@ function FormCliente() {
                                         icon
                                         labelPosition='left'
                                         color='orange'
-                                        onClick={this.listar}
                                     >
                                         <Icon name='reply' />
                                         <Link to={'/list-produto'}>Voltar</Link>
@@ -140,7 +171,7 @@ function FormCliente() {
                                             labelPosition='left'
                                             color='blue'
                                             floated='right'
-                                            onClick={this.salvar}
+                                            onClick={() => salvar()}
                                         >
                                             <Icon name='save' />
                                             Salvar

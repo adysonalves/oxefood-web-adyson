@@ -94,19 +94,22 @@ class ListCliente extends React.Component {
                                             <Table.Cell>R${produto.valorUnitario}</Table.Cell>
                                             <Table.Cell textAlign='center'>
 
-                                                <Button
+                                                 <Button
                                                     inverted
                                                     circular
-                                                    icon='edit'
-                                                    color='blue'
-                                                    itle='Clique aqui para editar os dados deste entregador' /> &nbsp;
+                                                    color='green'
+                                                    title='Clique aqui para editar os dados deste produto'
+                                                    icon>
+                                                    <Link to="/form-produto" state={{ id: produto.id }} style={{ color: 'green' }}> <Icon name='edit' /> </Link>
+                                                </Button> &nbsp;
 
                                                 <Button
                                                     inverted
                                                     circular
                                                     icon='trash'
                                                     color='red'
-                                                    title='Clique aqui para remover este cliente' />
+                                                    title='Clique aqui para remover este produto'
+                                                    onClick={e => this.confirmaRemover(produto.id)} />
 
                                             </Table.Cell>
                                         </Table.Row>
