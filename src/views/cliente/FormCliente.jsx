@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import InputMask from 'react-input-mask';
 import { Link, useLocation } from "react-router-dom";
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
+import { ENDERECO_SERVIDOR } from '../../util/Constantes';
 
 export default function FormCliente () {
 
@@ -19,7 +20,7 @@ export default function FormCliente () {
 		
 		if (state != null && state.id != null) {
 
-			axios.get('http://localhost:8082/api/cliente/'+state.id)
+			axios.get(ENDERECO_SERVIDOR + '/api/cliente/'+state.id)
 			.then((response) => {
 
 				console.log('response.data.nome: ',response.data.nome)
@@ -62,13 +63,13 @@ export default function FormCliente () {
 
 		if (idCliente != null) { //Alteração:
 
-			axios.put("http://localhost:8082/api/cliente/" + idCliente, clienteRequest)
+			axios.put(ENDERECO_SERVIDOR + "/api/cliente/" + idCliente, clienteRequest)
 			.then((response) => { console.log('Cliente alterado com sucesso.') })
 			.catch((error) => { console.log('Erro ao alter um cliente.') })
 			
 		} else { //Cadastro:
 
-			axios.post("http://localhost:8082/api/cliente/", clienteRequest)
+			axios.post(ENDERECO_SERVIDOR + "/api/cliente", clienteRequest)
 			.then((response) => { console.log('Cliente cadastrado com sucesso.') })
 			.catch((error) => { console.log('Erro ao incluir o cliente.') })
 		}
