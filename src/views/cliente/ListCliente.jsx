@@ -22,6 +22,8 @@ class ListCliente extends React.Component{
 
         axios.get("http://localhost:8082/api/cliente")
         .then((response) => {
+
+            console.log(response.data)
           
             this.setState({
                 listaClientes: response.data
